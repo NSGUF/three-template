@@ -1,34 +1,59 @@
-<script setup lang="ts"></script>
-
 <template>
-  <nav>
-    <router-link to="/">Home</router-link>
-    |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view></router-view>
+    <IxLayout>
+        <IxLayoutHeader>threejs template</IxLayoutHeader>
+        <IxLayoutSider>
+            <IxMenu
+                mode="inline"
+                v-model:expandedKeys="expandedKeys"
+                :dataSource="dataSource"
+                :selectedKeys="selectedKeys">
+                <template #itemLabel="item">
+                    <router-link :to="item.key">
+                        <span>{{ item.label }}</span>
+                    </router-link>
+                </template>
+            </IxMenu>
+        </IxLayoutSider>
+        <IxLayoutContent>
+            <router-view></router-view>
+        </IxLayoutContent>
+    </IxLayout>
+
 </template>
 
+<script setup lang="ts">
+
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { MenuData } from '@idux/components/menu'
+
+const route = useRoute()
+const [, expandedKey, selectedKey] = route.path.split('/')
+const expandedKeys = ref([expandedKey])
+const selectedKeys = ref([`/${ expandedKey }/${ selectedKey }`])
+const dataSource = computed<MenuData[]>(() => {
+    return [
+        { key: `/`, label: '介绍' },
+        { key: `/about`, label: 'about' },
+    ]
+})
+
+watch(
+    () => route.path,
+    path => {
+        const [, expandedKey, selectedKey] = path.split('/')
+        expandedKeys.value = [expandedKey]
+        selectedKeys.value = [`/${ expandedKey }/${ selectedKey }`]
+    },
+)
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.ix-layout-header {
+    border-bottom: 1px solid #ddd;
 }
 
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+html, body, #app, .ix-layout, .ix-menu-inline {
+    height: 100%;
 }
 </style>

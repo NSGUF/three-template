@@ -1,13 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import type { RouteRecordRaw } from 'vue-router';
 
-import Home from './views/Home.vue';
+import Noise from './views/Noise.vue';
+import NoiseImg from './views/NoiseImg.vue';
 import About from './views/About.vue';
 
 export const routes: RouteRecordRaw[] = [
   {
-    path: '/',
-    component: Home,
+    path: '/noise',
+    component: Noise,
+  },
+  {
+    path: '/noise-img',
+    component: NoiseImg,
   },
   {
     path: '/about',
